@@ -47,36 +47,44 @@ public class Transformation {
         try {
             // compute rotation
             // TODO
+            // origine = eye
+            Vector z = lookAtPoint.subtract(eye).normalize();
 
+            // x = up /\ z / || up /\ z ||
+            Vector x = up.normalize().cross(z);
 
+            // y = z /\ x
+            Vector y = z.cross(x);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+            // Nt = (x y z)T
+            Matrix N = new Matrix(3, 3);
+            N.setCol(0, x);
+            N.setCol(1, y);
+            N.setCol(2, z);
+            Matrix Nt = N.transpose();
 
             // compute translation
             // TODO
+            // T vecteur de translation = 
+            // T = -Nt*eye
+            Vector T = Nt.multiply(eye).scale(-1);
 
-
-
-
-
-
-
-
-
-
-
+            // |         |
+            // |  Nt   T | = worldToCamera : permet de mettre un point (x y z 1) dans le plan
+            // |         |
+            // |0 0 0  1 |
+            for (int i=0; i < 3; i++) {
+                for (int j=0; j < 3; j++) {
+                    worldToCamera.set(i,j,Nt.get(i,j));
+                }
+            }
+            for (int j=0; j < 3; j++) {
+                worldToCamera.set(3,j,0);
+            }
+            for (int i=0; i < 3; i++) {
+                    worldToCamera.set(i,3,T.get(i));
+            }
+            worldToCamera.set(3,3,1);
 
 
         } catch (Exception e) {
@@ -91,7 +99,9 @@ public class Transformation {
      */
     public void setProjection() {
         // TODO
-
+        projection.set(0, 0, 1);
+        projection.set(1, 1, 1);
+        projection.set(2, 2, 1); 
 
 
 
@@ -107,10 +117,10 @@ public class Transformation {
     public void setCalibration(double focal, double width, double height) {
 
         // TODO
-
-
-
-
+        this.calibration.set(0, 0, focal);
+        this.calibration.set(1, 1, focal);
+        this.calibration.set(0, 2, width / 2);
+        this.calibration.set(1, 2, height / 2);
 
         System.out.println("Calibration matrix:\n" + calibration);
     }
@@ -126,10 +136,18 @@ public class Transformation {
      */
     public Vector projectPoint(Vector p) throws SizeMismatchException {
         // TODO
+        Vector p4 = new Vector(4);
+        p4.set(0, p.get(0));
+        p4.set(1, p.get(1));
+        p4.set(2, p.get(2));
+        p4.set(3, 1);
         Vector ps = new Vector(3);
-
-
-
+        p4 = worldToCamera.multiply(p4);
+        p4 = projection.multiply(p4);
+        p4.set(0, p4.get(0)/p4.get(2));
+        p4.set(1, p4.get(1)/p4.get(2));
+        p4.set(2, 1);
+        ps = calibration.multiply(p4);
 
         return ps;
     }
