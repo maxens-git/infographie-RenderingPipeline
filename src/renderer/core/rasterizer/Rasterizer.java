@@ -265,50 +265,53 @@ public class Rasterizer {
         }
         final Matrix cMat = makeBarycentricCoordsMatrix(v1, v2, v3);
 
-        // iterate over the triangle's bounding box
-        // TODO
+        int x1 = v1.getX();
+        int y1 = v1.getY();
+        int x2 = v2.getX();
+        int y2 = v2.getY();
+        int x3 = v3.getX();
+        int y3 = v3.getY();
 
+        Vector b1 = cMat.multiply(new Vector(1, v1.getX(), v1.getY()));
+        Vector b2 = cMat.multiply(new Vector(1, v2.getX(), v2.getY()));
+        Vector b3 = cMat.multiply(new Vector(1, v3.getX(), v3.getY()));
 
+        int xmin = Math.min(v1.getX(), Math.min(v2.getX(), v3.getX()));
+        int ymin = Math.min(v1.getY(), Math.min(v2.getY(), v3.getY()));
+        int xmax = Math.max(v1.getX(), Math.max(v2.getX(), v3.getX()));
+        int ymax = Math.max(v1.getY(), Math.max(v2.getY(), v3.getY()));
 
+        int nbAttributes = v1.getNumAttributes();
 
+        for (int x = xmin; x <= xmax; x++) {
+            for (int y = ymin; y <= ymax; y++) {
 
+                Vector coor = new Vector(1, x, y);
+                Vector coorBary = cMat.multiply(coor);
 
+                double alpha = coorBary.get(0);
+                double beta = coorBary.get(1);
+                double gamma = coorBary.get(2);
 
+                // si on est dans le triangle
+                if (alpha >= 0 && beta >= 0 && gamma >= 0) {
+                    Fragment fragment = new Fragment(x, y);
 
+                    for (int j = 0; j < nbAttributes; j++) {
+                        double interpolated = alpha * v1.getAttribute(j) + beta * v2.getAttribute(j)
+                                + gamma * v3.getAttribute(j);
 
+                        // si on est en train d'interpoler les couleurs alors on clamp
+                        if (j == Fragment.COLOR_R || j == Fragment.COLOR_G || j == Fragment.COLOR_B) {
+                            interpolated = MathUtils.clamp(interpolated, 0.0, 1.0);
+                        }
 
+                        fragment.setAttribute(j, interpolated);
+                    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    shader.shade(fragment);
+                }
+            }
+        }
     }
 }
