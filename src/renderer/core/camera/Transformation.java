@@ -145,10 +145,13 @@ public class Transformation {
         Vector ps = new Vector(3);
         p4 = worldToCamera.multiply(p4);
         p4 = projection.multiply(p4);
-        p4.set(0, p4.get(0)/p4.get(2));
-        p4.set(1, p4.get(1)/p4.get(2));
-        p4.set(2, 1);
+        // p4.set(0, p4.get(0)/p4.get(2));
+        // p4.set(1, p4.get(1)/p4.get(2));
+        // p4.set(2, 1);
         ps = calibration.multiply(p4);
+        ps.set(0, ps.get(0)/ps.get(2));
+        ps.set(1, ps.get(1)/ps.get(2));
+
 
         return ps;
     }

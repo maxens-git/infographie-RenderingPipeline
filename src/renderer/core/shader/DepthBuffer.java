@@ -54,7 +54,7 @@ public class DepthBuffer {
      */
     private boolean isWithinBounds(Fragment f) {
         return f.getX() >= 0 && f.getX() < width
-            && f.getY() >= 0 && f.getY() < height;
+                && f.getY() >= 0 && f.getY() < height;
     }
 
     /**
@@ -65,9 +65,19 @@ public class DepthBuffer {
      * @return true if the fragment passes the test, false otherwise
      */
     public boolean testFragment(Fragment f) {
+
         if (isWithinBounds(f)) {
-            // TODO
-            return false;
+            int x = f.getX();
+            int y = f.getY();
+            double d = f.getDepth();
+            //System.out.println("x " + x + " y " + y + " w " + width + " h " + height);
+            double depth = this.buffer.get(y, x);
+
+            if (d > depth) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             return false;
         }
@@ -80,7 +90,11 @@ public class DepthBuffer {
      */
     public void writeFragment(Fragment f) {
         if (isWithinBounds(f)) {
-            // TODO
+            int x = f.getX();
+            int y = f.getY();
+            double depth = f.getDepth();
+
+            this.buffer.set(y, x, depth);
         }
     }
 

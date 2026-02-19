@@ -297,6 +297,11 @@ public class Rasterizer {
                 if (alpha >= 0 && beta >= 0 && gamma >= 0) {
                     Fragment fragment = new Fragment(x, y);
 
+                    if (shader.isClipped(fragment)) {
+                        continue;
+                    }
+
+
                     for (int j = 0; j < nbAttributes; j++) {
                         double interpolated = alpha * v1.getAttribute(j) + beta * v2.getAttribute(j)
                                 + gamma * v3.getAttribute(j);
