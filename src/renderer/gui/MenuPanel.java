@@ -52,6 +52,18 @@ public class MenuPanel extends JPanel {
      */
     private static final String TEXTURE_ENDPOINT = "data/example_textured.scene";
     /**
+     * The path to the broccoli.
+     */
+    private static final String BROCCOLI_ENDPOINT = "data/broccoli.scene";
+    /**
+     * The path to the tree.
+     */
+    private static final String TREE_ENDPOINT = "data/tree.scene";
+    /**
+     * The path to the olympic rings.
+     */
+    private static final String OLYMPIC_ENDPOINT = "data/olympic.scene";
+    /**
      * The shift of the button.
      */
     private static final int TAB_SIZE_PIXEL = 30;
@@ -99,6 +111,18 @@ public class MenuPanel extends JPanel {
      * The wall texture selection button.
      */
     private final JRadioButton texture;
+    /**
+     * The broccoli mesh selection button.
+     */
+    private final JRadioButton broccoli;
+    /**
+     * The tree mesh selection button.
+     */
+    private final JRadioButton tree;
+    /**
+     * The olympic rings selection button.
+     */
+    private final JRadioButton olympic;
     /**
      * The file name input text field.
      */
@@ -226,6 +250,9 @@ public class MenuPanel extends JPanel {
         rabbit = new JRadioButton("Rabbit");
         suzanne = new JRadioButton("Suzanne");
         texture = new JRadioButton("Texture");
+        broccoli = new JRadioButton("Broccoli");
+        tree = new JRadioButton("Tree");
+        olympic = new JRadioButton("Olympic");
 
         filenameTextField = new JTextField();
         // set up the buttons
@@ -473,6 +500,60 @@ public class MenuPanel extends JPanel {
         });
         add(texture, constraints);
         meshGroup.add(texture);
+
+        // broccoli radio
+        broccoli.setMargin(insetsRadio);
+        constraints.gridy++;
+        broccoli.addItemListener(e -> {
+            if (!broccoli.isSelected()) {
+                return;
+            }
+            try {
+                render.setScene(BROCCOLI_ENDPOINT);
+            } catch (final IOException e1) {
+                // should not be reach
+                e1.printStackTrace();
+            }
+            updateRender();
+        });
+        add(broccoli, constraints);
+        meshGroup.add(broccoli);
+
+        // tree radio
+        tree.setMargin(insetsRadio);
+        constraints.gridy++;
+        tree.addItemListener(e -> {
+            if (!tree.isSelected()) {
+                return;
+            }
+            try {
+                render.setScene(TREE_ENDPOINT);
+            } catch (final IOException e1) {
+                // should not be reach
+                e1.printStackTrace();
+            }
+            updateRender();
+        });
+        add(tree, constraints);
+        meshGroup.add(tree);
+
+        // olympic radio
+        olympic.setMargin(insetsRadio);
+        constraints.gridy++;
+        olympic.addItemListener(e -> {
+            if (!olympic.isSelected()) {
+                return;
+            }
+            try {
+                render.setScene(OLYMPIC_ENDPOINT);
+            } catch (final IOException e1) {
+                // should not be reach
+                e1.printStackTrace();
+            }
+            updateRender();
+        });
+        add(olympic, constraints);
+        meshGroup.add(olympic);
 
         // another filename
         constraints.gridy++;
