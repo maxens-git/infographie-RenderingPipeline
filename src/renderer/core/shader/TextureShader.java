@@ -83,27 +83,20 @@ public class TextureShader extends Shader {
         }
         // The Fragment may not have texture coordinates
         try {
-            // TODO
+            double u = fragment.getAttribute(7);
+            double v = fragment.getAttribute(8);
 
+            Color tt = texture.sample(u, v);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            if (this.combineWithBaseColor) {
+                Color fc = fragment.getColor();
+                int r = MathUtils.clamp((tt.getRed() * fc.getRed()) / 255, 0, 255);
+                int g = MathUtils.clamp((tt.getGreen() * fc.getGreen()) / 255, 0, 255);
+                int b = MathUtils.clamp((tt.getBlue() * fc.getBlue()) / 255, 0, 255);
+                screen.setPixel(fragment.getX(), fragment.getY(), new Color(r, g, b));
+            } else {
+                screen.setPixel(fragment.getX(), fragment.getY(), tt);
+            }
 
         } catch (ArrayIndexOutOfBoundsException e) {
             screen.setPixel(fragment.getX(), fragment.getY(), fragment.getColor());

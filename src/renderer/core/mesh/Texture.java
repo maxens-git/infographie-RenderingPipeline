@@ -47,10 +47,12 @@ public class Texture {
      */
     public Color sample(double u, double v) {
         // TODO
+        double wu = u % 1.0;
+        double wv = v % 1.0;
 
+        int px = (int) (wu * width);
+        int py = (int) (wv * height);
 
-
-
-        return new Color (0,0,0);
+        return new Color(image.getRGB(px, py));
     }
 }
