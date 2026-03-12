@@ -265,17 +265,6 @@ public class Rasterizer {
         }
         final Matrix cMat = makeBarycentricCoordsMatrix(v1, v2, v3);
 
-        int x1 = v1.getX();
-        int y1 = v1.getY();
-        int x2 = v2.getX();
-        int y2 = v2.getY();
-        int x3 = v3.getX();
-        int y3 = v3.getY();
-
-        Vector b1 = cMat.multiply(new Vector(1, v1.getX(), v1.getY()));
-        Vector b2 = cMat.multiply(new Vector(1, v2.getX(), v2.getY()));
-        Vector b3 = cMat.multiply(new Vector(1, v3.getX(), v3.getY()));
-
         int xmin = Math.min(v1.getX(), Math.min(v2.getX(), v3.getX()));
         int ymin = Math.min(v1.getY(), Math.min(v2.getY(), v3.getY()));
         int xmax = Math.max(v1.getX(), Math.max(v2.getX(), v3.getX()));
