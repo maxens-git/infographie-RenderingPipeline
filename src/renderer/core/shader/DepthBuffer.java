@@ -70,7 +70,6 @@ public class DepthBuffer {
             int x = f.getX();
             int y = f.getY();
             double d = f.getDepth();
-            //System.out.println("x " + x + " y " + y + " w " + width + " h " + height);
             double depth = this.buffer.get(y, x);
 
             if (d > depth) {

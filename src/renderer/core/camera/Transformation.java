@@ -46,17 +46,13 @@ public class Transformation {
     public void setLookAt(final Vector eye, final Vector lookAtPoint, final Vector up) {
         try {
             // compute rotation
-            // TODO
             // origine = eye
             Vector z = lookAtPoint.subtract(eye).normalize();
 
-            // x = up /\ z / || up /\ z ||
             Vector x = up.normalize().cross(z);
 
-            // y = z /\ x
             Vector y = z.cross(x);
 
-            // Nt = (x y z)T
             Matrix N = new Matrix(3, 3);
             N.setCol(0, x);
             N.setCol(1, y);
@@ -64,15 +60,8 @@ public class Transformation {
             Matrix Nt = N.transpose();
 
             // compute translation
-            // TODO
-            // T vecteur de translation = 
-            // T = -Nt*eye
             Vector T = Nt.multiply(eye).scale(-1);
 
-            // |         |
-            // |  Nt   T | = worldToCamera : permet de mettre un point (x y z 1) dans le plan
-            // |         |
-            // |0 0 0  1 |
             for (int i=0; i < 3; i++) {
                 for (int j=0; j < 3; j++) {
                     worldToCamera.set(i,j,Nt.get(i,j));
@@ -135,17 +124,17 @@ public class Transformation {
      * @throws SizeMismatchException if the size of the input vector is not 3
      */
     public Vector projectPoint(Vector p) throws SizeMismatchException {
-        // TODO
         Vector p4 = p.homogeneousPoint() ;
-
         Vector ps = new Vector(3);
+
         p4 = worldToCamera.multiply(p4);
+
         ps = projection.multiply(p4);
 
         ps = calibration.multiply(ps);
+
         ps.set(0, ps.get(0)/ps.get(2));
         ps.set(1, ps.get(1)/ps.get(2));
-
 
         return ps;
     }
